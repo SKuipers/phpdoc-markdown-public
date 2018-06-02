@@ -7,7 +7,7 @@
 {{ class.name }}::{{ method.name }}( {% for argument in method.arguments %}
 {{- argument.types ? argument.types|join('|')~' ' }}
 {{- argument.byReference ? '&' }}
-{{- argument.name }}{{ argument.default ? ' = '~argument.default }}
+{{- argument.name }}{{ argument.default ? (' = '~argument.default)|raw }}
 {%- if not loop.last %}, {% endif %}
 {%- endfor %} )
 {{- method.response.types ? ': '~method.response.types|join('|') }}
@@ -19,7 +19,7 @@
 {% if method.deprecated %}* **Warning:** this method is **deprecated**. This means that this method will likely be removed in a future version.
 {% endif %}
 
-{% if method.arguments is not empty %}
+{% if false and method.arguments is not empty %}
 **Parameters:**
 
 | Parameter | Type | Description |

@@ -1,0 +1,5 @@
+---
+title: {{ node.name == "\\" ? "API" : node.name }}
+date: {{ "now"|date("c") }}
+weight: {{ node.name == "\\" ? 100 : 10 }}
+---

@@ -1,3 +1,10 @@
+{% set class = node %}
+---
+title: "{{ class.name }}"
+date: {{ "now"|date("c") }}
+weight: 0
+---
+
 ## {{ class.name }}
 
 {{ class.summary|raw }}
@@ -23,6 +30,32 @@
 {% endfor %}
 
 {% endif %}{# class.tags.see || class.tags.link #}
+
+
+{% set allMethods = node.magicMethods ? node.methods.merge(node.magicMethods) : node.methods %}
+{% if allMethods is not empty %}
+### Methods
+
+{% for item in allMethods %}
+{% if item.visibility == '' or item.visibility == 'public' %}
+- [{{ item.name }}](#{{ item.name|lower }})
+{% endif %}
+{% endfor %}
+
+{% endif %}
+
+{#
+{% set inheritedMethods = node.inheritedMethods %}
+{% if inheritedMethods is not empty %}
+#### Inherited 
+{% for item in inheritedMethods %}
+{% if item.visibility == '' or item.visibility == 'public' %}
+- [{{ item.name }}](#{{ item.name|lower }})
+{% endif %}
+{% endfor %}
+
+{% endif %}
+#}
 
 {% for method in publicMethods(class) %}
 {% include 'method.md.twig' %}
