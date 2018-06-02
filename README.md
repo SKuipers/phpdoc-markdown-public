@@ -1,3 +1,5 @@
+This repo is forked from [cvuorinen/phpdoc-markdown-public](https://github.com/cvuorinen/phpdoc-markdown-public) and in development for auto-generated Hugo markdown files for the Gibbon docs.
+
 # phpDocumentor markdown-public template
 
 [phpDocumentor template](http://www.phpdoc.org/docs/latest/getting-started/changing-the-look-and-feel.html) that generates Markdown documentation of only the public API. It will skip all abstract classes and non-public methods.
