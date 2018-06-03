@@ -7,11 +7,11 @@
 {{ method.static ? 'static ' -}}
 {{ method.final ? 'final ' -}}
 {{ method.abstract ? 'abstract ' -}}
-{{ class.name }}::{{ method.name }}( {% for argument in method.arguments %}
-{{- argument.types ? argument.types|join('|')~' ' }}
-{{- argument.byReference ? '&' }}
-{{- argument.name }}{{ argument.default ? (' = '~argument.default)|raw }}
-{%- if not loop.last %}, {% endif %}
+{{ class.name }}::{{ method.name }}({%- for argument in method.arguments -%}
+{{- argument.types is not empty ? ' '~argument.types|join('|')~' ' : ' ' -}}
+{{- argument.byReference ? '&' -}}
+{{- argument.name -}}{{ argument.default ? (' = '~argument.default)|raw }}
+{%- if not loop.last %},{% endif -%}
 {%- endfor %} )
 {{- method.response.types ? ': '~method.response.types|join('|') }}
 ```

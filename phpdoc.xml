@@ -12,6 +12,7 @@
     </transformations>
     <files>
         <directory>../gibbon/src</directory>
+        <file>../gibbon/functions.php</file>
         <ignore>tests/*</ignore>
     </files>
 </phpdoc>

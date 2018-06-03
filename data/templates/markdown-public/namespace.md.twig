@@ -1,10 +1,11 @@
 ---
-date: {{ "now"|date("c") }}
 {% if node.name == "\\" %}
+date: {{ "now"|date("c") }}
 title: API
 weight: 100
+head: "<hr>"
 {% elseif node.name == "Gibbon" %}
-title: Namespaces
+title: Classes
 slug: gibbon
 weight: 10
 {% else %}

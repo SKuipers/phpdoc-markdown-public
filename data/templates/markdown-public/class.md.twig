@@ -1,7 +1,6 @@
 {% set class = node %}
 ---
 title: "{{ class.name }}"
-date: {{ "now"|date("c") }}
 weight: 0
 class: {{ class.FullyQualifiedStructuralElementName }}
 generated: true
@@ -56,9 +55,10 @@ generated: true
 {% if item.visibility == '' or item.visibility == 'public' %}
 {% if item.parent != currentParent %}
 
-###### Methods Inherited from {{ item.parent.name }}
+###### Inherited from {{ item.parent.name }}
 {% endif %}
-- [{{ item.name }}]( {{ '{{' }}< ref "api{{ item.parent.FullyQualifiedStructuralElementName|replace({"\\":"/"}) }}/index.md#{{ item.name|lower }}" >{{ '}}' }} ){{ item.summary is not empty ? ("<small> — "~item.summary~"</small>")|raw }}
+- {{ routeToMethod(item.parent, item)|raw }}
+{# - [{{ item.name }}]( {{ '{{' }}< ref "api{{ item.parent.FullyQualifiedStructuralElementName|replace({"\\":"/"}) }}/index.md#{{ item.name|lower }}" >{{ '}}' }} ){{ item.summary is not empty ? ("<small> — "~item.summary~"</small>")|raw }} #}
 {% set currentParent = item.parent %}{% endif %}
 {% endfor %}
 
@@ -67,5 +67,7 @@ generated: true
 
 {# in publicMethods(class) #}
 {% for method in allMethods %}
+{% if item.visibility == '' or item.visibility == 'public' %}
 {% include 'method.md.twig' %}
+{% endif %}
 {% endfor %}

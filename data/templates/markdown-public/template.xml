@@ -10,6 +10,8 @@
     <transformation query="indexes.classes" writer="twig" source="templates/markdown-public/class.md.twig" artifact="{{namespace}}/{{name}}/index.md" />
     <transformation query="indexes.interfaces" writer="twig" source="templates/markdown-public/class.md.twig" artifact="{{namespace}}/{{name}}/index.md" />
     <transformation query="indexes.traits" writer="twig" source="templates/markdown-public/class.md.twig" artifact="{{namespace}}/{{name}}/index.md" />
+    <transformation query="indexes.functions" writer="twig" source="templates/markdown-public/function.md.twig" artifact="Functions/{{name}}/index.md" />
+    <transformation writer="twig" source="templates/markdown-public/functions.md.twig" artifact="Functions/_index.md" />
   </transformations>
   <parameters>
     <parameter key="twig-debug">true</parameter>
