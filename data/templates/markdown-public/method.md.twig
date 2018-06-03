@@ -4,6 +4,9 @@
 
 {# Method signature #}
 ```php
+{{ method.static ? 'static ' -}}
+{{ method.final ? 'final ' -}}
+{{ method.abstract or isInterface(class) ? 'abstract ' -}}
 {{ class.name }}::{{ method.name }}( {% for argument in method.arguments %}
 {{- argument.types ? argument.types|join('|')~' ' }}
 {{- argument.byReference ? '&' }}
@@ -30,12 +33,16 @@
 
 {% endif %}{# method.arguments is not empty #}
 
-{% if method.response.description %}
+
+{% if method.response %}
+{% if method.response.types|join() == 'self' %}
+**Returns Self:** This method can be chained.
+{% elseif method.response.types and method.response.types|join() != 'void' %}
 **Return Value:**
-
-{{ method.response.description|raw }}
-
+`{{ method.response.types|join('|')|raw }}`  {{ method.response.description|raw }}
 {% endif %}
+{% endif %}
+
 
 {% if method.tags.see is not empty or method.tags.link is not empty %}
 **See Also:**

@@ -3,6 +3,7 @@
 title: "{{ class.name }}"
 date: {{ "now"|date("c") }}
 weight: 0
+class: {{ class.FullyQualifiedStructuralElementName }}
 ---
 
 ## {{ class.name }}
@@ -12,17 +13,14 @@ weight: 0
 {{ class.description|raw }}
 
 * Full name: {{ class.FullyQualifiedStructuralElementName }}
-{% if class.parent %}* Parent class: {{ class.parent.FullyQualifiedStructuralElementName }}
+{% if class.parent is not empty %}* Parent class: {{ class.parent.FullyQualifiedStructuralElementName }}
 {% endif %}
 {% if class.interfaces is not empty %}* This class implements: {{ class.interfaces|join(', ')|raw }}
 {% endif %}
 {% if class.deprecated %}* **Warning:** this class is **deprecated**. This means that this class will likely be removed in a future version.
 {% endif %}
 
-
-{# Include a Hugo shortcut that pull in any hand-written code docs and examples. #}
-{{ '{{' }}< api-hook "{{ class.FullyQualifiedStructuralElementName|replace({"\\":"/"}) }}" >{{ '}}' }} 
-
+{{ '{{' }}< api-example >{{ '}}' }} 
 
 {% if class.tags.see is not empty or class.tags.link is not empty %}
 **See Also:**
@@ -43,25 +41,30 @@ weight: 0
 
 {% for item in allMethods %}
 {% if item.visibility == '' or item.visibility == 'public' %}
-- [{{ item.name }}](#{{ item.name|lower }})
+- [{{ item.name }}](#{{ item.name|lower }}){{ item.summary is not empty ? ("<small> — "~item.summary~"</small>")|raw }}
 {% endif %}
 {% endfor %}
 
 {% endif %}
 
-{#
 {% set inheritedMethods = node.inheritedMethods %}
 {% if inheritedMethods is not empty %}
-#### Inherited 
+
+{% set currentParent = '' %}
 {% for item in inheritedMethods %}
 {% if item.visibility == '' or item.visibility == 'public' %}
-- [{{ item.name }}](#{{ item.name|lower }})
+{% if item.parent != currentParent %}
+
+###### Methods Inherited from {{ item.parent.name }}
 {% endif %}
+- [{{ item.name }}]( {{ '{{' }}< ref "api{{ item.parent.FullyQualifiedStructuralElementName|replace({"\\":"/"}) }}/index.md#{{ item.name|lower }}" >{{ '}}' }} ){{ item.summary is not empty ? ("<small> — "~item.summary~"</small>")|raw }}
+{% set currentParent = item.parent %}{% endif %}
 {% endfor %}
 
 {% endif %}
-#}
 
-{% for method in publicMethods(class) %}
+
+{# in publicMethods(class) #}
+{% for method in allMethods %}
 {% include 'method.md.twig' %}
 {% endfor %}

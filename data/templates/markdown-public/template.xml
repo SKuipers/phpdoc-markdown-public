@@ -7,9 +7,9 @@
   <transformations>
     <transformation writer="twig" source="templates/markdown-public/api.md.twig" artifact="_index.md" />
     <transformation query="indexes.namespaces" writer="twig" source="templates/markdown-public/namespace.md.twig" artifact="{{FullyQualifiedStructuralElementName}}/_index.md" />
-    <transformation query="indexes.classes" writer="twig" source="templates/markdown-public/class.md.twig" artifact="{{namespace}}/{{name}}.md" />
-    <transformation query="indexes.interfaces" writer="twig" source="templates/markdown-public/class.md.twig" artifact="{{namespace}}/{{name}}.md" />
-    <transformation query="indexes.traits" writer="twig" source="templates/markdown-public/class.md.twig" artifact="{{namespace}}/{{name}}.md" />
+    <transformation query="indexes.classes" writer="twig" source="templates/markdown-public/class.md.twig" artifact="{{namespace}}/{{name}}/index.md" />
+    <transformation query="indexes.interfaces" writer="twig" source="templates/markdown-public/class.md.twig" artifact="{{namespace}}/{{name}}/index.md" />
+    <transformation query="indexes.traits" writer="twig" source="templates/markdown-public/class.md.twig" artifact="{{namespace}}/{{name}}/index.md" />
   </transformations>
   <parameters>
     <parameter key="twig-debug">true</parameter>

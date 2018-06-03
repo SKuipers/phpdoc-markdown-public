@@ -2,10 +2,11 @@
 
 namespace Cvuorinen\PhpdocMarkdownPublic\Extension;
 
-use phpDocumentor\Descriptor\ClassDescriptor;
-use phpDocumentor\Descriptor\MethodDescriptor;
 use Twig_Extension;
 use Twig_SimpleFunction;
+use phpDocumentor\Descriptor\ClassDescriptor;
+use phpDocumentor\Descriptor\MethodDescriptor;
+use phpDocumentor\Descriptor\InterfaceDescriptor;
 
 /**
  * Twig extension to get only the public methods from a \phpDocumentor\Descriptor\ClassDescriptor instance.
@@ -32,7 +33,8 @@ class TwigClassPublicMethods extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('publicMethods', array($this, 'getPublicMethods'))
+            new Twig_SimpleFunction('publicMethods', array($this, 'getPublicMethods')),
+            new Twig_SimpleFunction('isInterface', array($this, 'isInterface'))
         );
     }
 
@@ -54,8 +56,19 @@ class TwigClassPublicMethods extends Twig_Extension
         return array_filter(
             $methods->getAll(),
             function (MethodDescriptor $method) {
-                return $method->getVisibility() === 'public';
+                return $method->getVisibility() === 'public' || $method->getVisibility() === '';
             }
         );
+    }
+
+    /**
+     * @param ClassDescriptor $class
+     *
+     * @return bool
+     */
+    public function isInterface($class)
+    {
+        return true;
+        return $class instanceof InterfaceDescriptor;
     }
 }
