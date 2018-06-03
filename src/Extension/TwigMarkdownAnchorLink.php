@@ -4,6 +4,7 @@ namespace Cvuorinen\PhpdocMarkdownPublic\Extension;
 
 use Twig_Extension;
 use Twig_SimpleFunction;
+use phpDocumentor\Descriptor\DescriptorAbstract;
 
 /**
  * Twig extension to create Markdown anchor links (within a single page).
@@ -40,7 +41,10 @@ class TwigMarkdownAnchorLink extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('anchorLink', array($this, 'createAnchorLink'))
+            new Twig_SimpleFunction('anchorLink', array($this, 'createAnchorLink')),
+            new Twig_SimpleFunction('routeToMethod', array($this, 'routeToMethod')),
+            new Twig_SimpleFunction('routeToClass', array($this, 'routeToClass')),
+            new Twig_SimpleFunction('routeTo', array($this, 'routeTo')),
         );
     }
 
@@ -60,5 +64,29 @@ class TwigMarkdownAnchorLink extends Twig_Extension
         array_push(self::$links, $anchor);
 
         return sprintf("[%s](%s)", $title, '#' . $anchor . $anchorSuffix);
+    }
+
+    public function routeToMethod(DescriptorAbstract $class, DescriptorAbstract $method)
+    {
+        $path = str_replace("\\", "/",$class->getFullyQualifiedStructuralElementName());
+        $anchor = strtolower($method->getName());
+
+        return sprintf('[%s]({{< ref "%s" >}})', $method->getName(), 'api' . $path . '/index.md#' . $anchor);
+    }
+
+    public function routeToClass(DescriptorAbstract $class)
+    {
+        $path = str_replace("\\", "/",$class->getFullyQualifiedStructuralElementName());
+
+        return sprintf('[%s]({{< ref "%s" >}})', $class->getName(), 'api' . $path . '/index.md');
+    }
+
+    public function routeTo($path)
+    {
+        $name = substr(strrchr($path, "\\"), 1);
+        $anchor = substr(strrchr($path, ":"), 1);
+        $path = str_replace("\\", "/", strchr($path, ':', true));
+
+        return sprintf('[%s]({{< ref "%s" >}})', $name, 'api' . $path . '/index.md#' .$anchor );
     }
 }
