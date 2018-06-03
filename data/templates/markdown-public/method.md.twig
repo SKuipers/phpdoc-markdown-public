@@ -6,7 +6,7 @@
 ```php
 {{ method.static ? 'static ' -}}
 {{ method.final ? 'final ' -}}
-{{ method.abstract or isInterface(class) ? 'abstract ' -}}
+{{ method.abstract ? 'abstract ' -}}
 {{ class.name }}::{{ method.name }}( {% for argument in method.arguments %}
 {{- argument.types ? argument.types|join('|')~' ' }}
 {{- argument.byReference ? '&' }}
