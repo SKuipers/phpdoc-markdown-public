@@ -3,6 +3,7 @@
 namespace Cvuorinen\PhpdocMarkdownPublic\Extension;
 
 use Twig_Extension;
+use Twig\TwigFilter;
 use Twig_SimpleFunction;
 use phpDocumentor\Descriptor\DescriptorAbstract;
 
@@ -48,6 +49,13 @@ class TwigMarkdownAnchorLink extends Twig_Extension
         );
     }
 
+    public function getFilters()
+    {
+        return array(
+            new TwigFilter('className', array($this, 'classNameFilter')),
+        );
+    }
+
     /**
      * @param string $title
      *
@@ -88,5 +96,16 @@ class TwigMarkdownAnchorLink extends Twig_Extension
         $path = str_replace("\\", "/", strchr($path, ':', true));
 
         return sprintf('[%s]({{< ref "%s" >}})', $name, 'api' . $path . '/index.md#' .$anchor );
+    }
+
+    public function classNameFilter($value, $chr = "\\")
+    {
+        if (is_array($value)) {
+            return array_map(function($item) {
+                return substr(strrchr(strval($item), $chr), 1);
+            }, $value);
+        } else {
+            return substr(strrchr($value, $chr), 1);
+        }
     }
 }

@@ -6,7 +6,11 @@ class: {{ class.FullyQualifiedStructuralElementName }}
 generated: true
 ---
 
-## {{ class.name }}
+## {{ class.name }} {% if class.interfaces is not empty %}<small><i>implements {% for interface in class.interfaces -%}
+<abbr title="{{ interface }}">{{ interface|className }}</abbr>
+{%- if not loop.last %}, {% endif -%}
+{%- endfor -%}</i></small>{% endif %}
+
 
 {{ class.summary|raw }}
 
@@ -15,7 +19,7 @@ generated: true
 * Full name: {{ class.FullyQualifiedStructuralElementName }}
 {% if class.parent is not empty %}* Parent class: {{ class.parent.FullyQualifiedStructuralElementName }}
 {% endif %}
-{% if class.interfaces is not empty %}* This class implements: {{ class.interfaces|join(', ')|raw }}
+{% if class.interfaces is not empty %}* This class implements: {{ class.interfaces|className|join(', ')|raw }}
 {% endif %}
 {% if class.deprecated %}* **Warning:** this class is **deprecated**. This means that this class will likely be removed in a future version.
 {% endif %}
@@ -39,9 +43,9 @@ generated: true
 {% if allMethods is not empty %}
 ### Methods
 
-{% for item in allMethods %}
-{% if item.visibility == '' or item.visibility == 'public' %}
-- [{{ item.name }}](#{{ item.name|lower }}){{ item.summary is not empty ? ("<small> — "~item.summary~"</small>")|raw }}
+{% for method in allMethods %}
+{% if method.visibility == '' or method.visibility == 'public' %}
+- [{{ method.name }}](#{{ method.name|lower }}){{ method.summary is not empty ? ("<small> — "~method.summary~"</small>")|raw }}
 {% endif %}
 {% endfor %}
 
@@ -51,15 +55,15 @@ generated: true
 {% if inheritedMethods is not empty %}
 
 {% set currentParent = '' %}
-{% for item in inheritedMethods %}
-{% if item.visibility == '' or item.visibility == 'public' %}
-{% if item.parent != currentParent %}
+{% for method in inheritedMethods %}
+{% if method.visibility == '' or method.visibility == 'public' %}
+{% if method.parent != currentParent %}
 
-###### Inherited from {{ item.parent.name }}
+###### Inherited from {{ method.parent.name }}
 {% endif %}
-- {{ routeToMethod(item.parent, item)|raw }}
-{# - [{{ item.name }}]( {{ '{{' }}< ref "api{{ item.parent.FullyQualifiedStructuralElementName|replace({"\\":"/"}) }}/index.md#{{ item.name|lower }}" >{{ '}}' }} ){{ item.summary is not empty ? ("<small> — "~item.summary~"</small>")|raw }} #}
-{% set currentParent = item.parent %}{% endif %}
+- {{ routeToMethod(method.parent, method)|raw }}
+{# - [{{ method.name }}]( {{ '{{' }}< ref "api{{ method.parent.FullyQualifiedStructuralElementName|replace({"\\":"/"}) }}/index.md#{{ method.name|lower }}" >{{ '}}' }} ){{ method.summary is not empty ? ("<small> — "~method.summary~"</small>")|raw }} #}
+{% set currentParent = method.parent %}{% endif %}
 {% endfor %}
 
 {% endif %}
@@ -67,7 +71,7 @@ generated: true
 
 {# in publicMethods(class) #}
 {% for method in allMethods %}
-{% if item.visibility == '' or item.visibility == 'public' %}
+{% if method.visibility == '' or method.visibility == 'public' %}
 {% include 'method.md.twig' %}
 {% endif %}
 {% endfor %}
